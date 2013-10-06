@@ -31,7 +31,9 @@ module Helios
     private
 
     def service(identifier, options = {}, &block)
-      if identifier.is_a?(Class)
+      if identifier.to_s == "admin"
+        middleware = Helios::Frontend
+      elsif identifier.is_a?(Class)
         middleware = identifier
       else
         begin
@@ -41,14 +43,14 @@ module Helios
         end
       end
 
-      path = "/#{(options.delete(:root) || DEFAULT_PATHS[identifier] || identifier)}".squeeze("/")
+      options[:root] = "/#{(options.delete(:root) || DEFAULT_PATHS[identifier] || identifier)}".squeeze("/")
 
-      map path do
+      map options[:root] do
         instance_eval(&block) if block_given?
         run middleware.new(self, options)
       end
 
-      @services[path] = middleware
+      @services[options[:root]] = middleware
     end
 
     def constantize(identifier)
@@ -57,6 +59,7 @@ module Helios
   end
 end
 
+require 'helios/frontend'
 require 'helios/backend/data'
 require 'helios/backend/in-app-purchase'
 require 'helios/backend/passbook'

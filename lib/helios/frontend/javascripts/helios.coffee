@@ -68,7 +68,7 @@ $ ->
 
     Helios.entities = new Helios.Collections.Entities
 
-    url = _.compact([Helios.services['data'], 'resources']).join('/').replace(/^\//, "")
+    url = _.compact([Helios.services['data'], 'resources']).join('/')
     Helios.entities.fetch(type: 'OPTIONS', url: url, success: Helios.initialize, error: Helios.initialize)
   )
 

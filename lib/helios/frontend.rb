@@ -17,6 +17,11 @@ module Helios
     register Sinatra::JstPages
 
     use Rack::BounceFavicon
+    
+    def initialize(app, options = {}, &block)
+      super()
+      @admin_root = options[:root]
+    end
 
     assets do
       serve '/javascripts', from: '/javascripts'
@@ -55,8 +60,10 @@ module Helios
 
     serve_jst '/javascripts/helios/templates.js', root: settings.root + '/templates'
 
+    
+
     get '' do
-      redirect request.fullpath + "/"
+      haml :index
     end
 
     get '/' do

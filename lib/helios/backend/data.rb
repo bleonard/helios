@@ -14,6 +14,7 @@ class Helios::Backend::Data < Sinatra::Base
     super(Rack::Scaffold.new(options))
 
     @model = CoreData::DataModel.new(options[:model]) rescue nil
+    @root_path = options[:root]
   end
 
   before do
@@ -32,7 +33,7 @@ class Helios::Backend::Data < Sinatra::Base
     @model.entities.collect{ |entity|
       {
         name: entity.name,
-        url: "/#{entity.name.downcase.pluralize}",
+        url: "#{@root_path}/#{entity.name.downcase.pluralize}",
         attributes: Hash[entity.attributes.collect{|attribute| [attribute.name, attribute.type]}]
       }
     }.to_json
